@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+   <head>
+      <meta charset="UTF-8">
+      <title>BeatsBuddy App</title>
+      <link rel="stylesheet" href="primer.scss" >
+      <script src="d3.min.js" charset="utf8"></script>
+      <style>
+         main { padding: 24px; }
+	 table { margin-top: 24px; }
+	 td { width: 180px; }
+      </style>
+   </head>
+   <body>
+      <header>
+         <h1>BeatsBuddy App</h1>
+      </header>
+      <main>
+      <nav class="masthead">
+         <a class="brand" href="/">Home</a>
+	 <ul class="nav">
+	    <li class="is-active"><a href="#">Albums</a></li>
+	    <li><a href="#">Tasks</a></li>
+	 </ul>
+      </nav>
+      <main class="layout-vertical">
+         <button class="btn btn-primary">Load Prices</button>
+         <table class="datagrid">
+	    <thead>
+	       <tr>
+	          <th>Instrument</th>
+	          <th>Bid</th>
+	          <th>Offer</th>
+	       </tr>
+	    </thead>
+	    <tbody>
+	    </tbody>
+	 </table>
+      </main>
+      <script>
+         d3.select("button").on("click", loadPrices)
+         function loadPrices() {
+            d3.json("/prices/", function(err, res) {
+	       if (err) alert("Unable to load price data.")
+	       else renderTable(res)
+	    })
+	 }
+
+	 function renderTable(data) {
+
+	    var format = d3.format(".3f")
+	      , prices = data.map(function(d) {
+	           return [d.id, format(d.bid), format(d.offer)]
+		})
+		
+	    var tr = d3.select("tbody")
+	       .selectAll("tr")
+	       .data(prices)
+	    tr.enter()
+	       .append("tr")
+
+	    var td = tr.selectAll("td")
+	       .data(function(d) { return d })
+	    td.enter()
+	       .append("td")
+	    td.text(String)
+	 }
+
+	</script>
+   </body>
+</html>

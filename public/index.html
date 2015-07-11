@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>BeatsBuddy</title>
+	<link href="css/bbBasic.css" type="text/css" rel="stylesheet" />
+	<script src="d3.min.js" charset="utf8"></script>
+</head>
+<body>
+
+<div>
+
+	<div id="masthead">
+		<h1 id="title">BeatsBuddy</h1>
+	</div>
+
+	<nav class="navigation">
+		<ul class="nav">
+			<li class="is-active"><a href="">Add a new album</a></li>
+			<li class="is-active"><a href="tasks/newTask.html" target="_blank">Add a new task</a></li>
+		</ul>
+	</nav>
+		<p>Search: <input type="search" name="search"></p>
+
+	<span>
+		<div class="column1" >
+			<table class="datagrid" >
+				<thead>
+				<tr>
+					<th>Release</th>
+					<th>Artist</th>
+					<th>Title</th>
+				</tr>
+				</thead>
+				<tbody id="albumRecords">
+				</tbody>
+			</table>
+		</div>
+
+		<div class="column2" >
+			<table class="datagrid">
+				<thead>
+				<tr>
+					<th>Id</th>
+					<th>Price</th>
+					<th>Offer</th>
+				</tr>
+				</thead>
+				<tbody id="priceRecords">
+				</tbody>
+			</table>
+			<br/>
+			<table class="datagrid">
+				<thead>
+				<tr>
+					<th>Title</th>
+					<th>Description</th>
+					<th>Due Date</th>
+				</tr>
+				</thead>
+				<tbody id="taskRecords">
+				</tbody>
+			</table>
+		</div>
+	</span>
+
+</div>
+
+<script>
+
+	d3.select("#albumButton").on("click", populateTables())
+
+	onload(populateTables())
+
+	function populateTables() {
+		loadAlbums()
+		loadPrices()
+		loadTasks()
+	}
+
+	function loadAlbums() {
+		d3.json("http://localhost:8080/albums", function(err, res) {
+			if (err) alert("Unable to load album data.")
+			else renderAlbumTable(res)
+		})
+	}
+
+	function renderAlbumTable(data) {
+
+		var albums = data.map(function(d) {
+			var releaseDateRaw = new Date(d.releaseDate)
+			var year = releaseDateRaw.getFullYear()
+			var month = releaseDateRaw.getMonth()
+			var date = releaseDateRaw.getDate()
+			var releaseDateString = year + '.' + month + '.' + date
+			return [releaseDateString, d.artist, d.title]
+		})
+
+		var tr = d3.select("#albumRecords")
+				.selectAll("tr")
+				.data(albums)
+		tr.enter()
+				.append("tr")
+
+		var td = tr.selectAll("td")
+				.data(function(d) { return d })
+		td.enter()
+				.append("td")
+		td.text(String)
+	}
+
+	function loadPrices() {
+		d3.json("http://localhost:8080/prices", function(err, res) {
+			if (err) alert("Unable to load price data.")
+			else renderPricesTable(res)
+		})
+	}
+
+	function renderPricesTable(data) {
+
+		var albums = data.map(function(d) {
+			return [d.id, d.bid, d.offer]
+		})
+
+		var tr = d3.select("#priceRecords")
+				.selectAll("tr")
+				.data(albums)
+		tr.enter()
+				.append("tr")
+
+		var td = tr.selectAll("td")
+				.data(function(d) { return d })
+		td.enter()
+				.append("td")
+		td.text(String)
+	}
+
+	function loadTasks() {
+		d3.json("http://localhost:8080/tasks", function(err, res) {
+			if (err) alert("Unable to load task data.")
+			else renderTaskTable(res)
+		})
+	}
+
+	function renderTaskTable(data) {
+
+		var tasks = data.map(function(d) {
+			var dueDateRaw = new Date(d.dueDate)
+			var year = dueDateRaw.getFullYear()
+			var month = dueDateRaw.getMonth()
+			var date = dueDateRaw.getDate()
+			var dueDateString = year + '.' + month + '.' + date
+			return [d.title, d.description, dueDateString]
+		})
+
+		var tr = d3.select("#taskRecords")
+				.selectAll("tr")
+				.data(tasks)
+		tr.enter()
+				.append("tr")
+
+		var td = tr.selectAll("td")
+				.data(function(d) { return d })
+		td.enter()
+				.append("td")
+		td.text(String)
+	}
+
+</script>
+</body>
+</html>

@@ -1,0 +1,93 @@
+body {
+        background-color: #222222;
+        font-family: "Segoe UI";
+        color: lightblue;
+        table-layout: fixed;
+}
+header {
+        background-color: #000000;
+}
+h1 {    color: #eaf2f5;
+        background: linear-gradient(#000000, #222222);
+        font-family: Helvetica;
+}
+#title {
+    margin: 10px auto 10px auto;
+    font-size: xx-large;
+}
+th {
+    text-transform: uppercase;
+}
+thead {
+    background: linear-gradient(#000000, #222222);
+    display: block;
+    width: 315px;
+}
+thead th {
+    width: 100px;
+}
+tbody {
+    display: block;
+    width: 315px;
+}
+td {    vertical-align: top;
+        border-width: 1px;
+        text-align: center;
+        width: 70px;
+}
+a {     color: #8add6d;
+}
+a:visited {     color: #339900;
+}
+a:hover {     color: #b9dcac;
+             text-decoration: none;
+}
+table {
+    border-collapse: collapse;
+}
+::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+} /* this targets the default scrollbar (compulsory) */
+::-webkit-scrollbar-track {
+    background-color: #777777;
+    margin-top: 20px;
+} /* the new scrollbar will have a flat appearance with the set background color */
+
+::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.2);
+} /* this will style the thumb, ignoring the track */
+
+::-webkit-scrollbar-corner {
+    background-color: black;
+} /* if both the vertical and the horizontal bars appear, then perhaps the right bottom corner also needs to be styled */
+.datagrid {
+    color: #ffffff;
+    font-size: small;
+    height: 100px;
+    width: 150px;
+}
+.datagrid tbody tr:nth-child(odd) {
+    background: #343434;
+}
+.datagrid tbody tr:nth-child(even) {
+    background: #555555;
+}
+.column1 {
+    box-sizing: border-box;
+    overflow: hidden;
+    max-height: 400px;
+    float: left;
+    padding-right: 10px;
+}
+.column1:hover {
+    overflow-y: scroll;
+    padding-right: 0px;
+}
+.column2 {
+    max-height: 50px;
+    display: inline-block;
+    margin-left: 10px;
+    width: 150px;
+}
+
