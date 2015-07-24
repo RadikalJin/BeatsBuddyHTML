@@ -12,22 +12,12 @@
         p  { color: #eaf2f5;}
     </style>
 </head>
-<script>
-/*    d3.select("#albumButton").on("click", populateTables)
 
-    function loadAlbums() {
-        d3.json("http://localhost:8080/albums", function(err, res) {
-            if (err) alert("Unable to load album data.")
-            else renderAlbumTable(res)
-        })
-    }*/
-
-</script>
 <body>
 <p>You'll be able to add a new task using this page soon.</p>
 <button onclick="window.close" >Close Window</button>
 
-<form id="myForm" action="http://localhost:8080/createTask" method="get" >
+<form id="myForm" >
     <p>Title:
         <input type="text"
                name="title"
@@ -44,29 +34,41 @@
     <input type="date" id="dueDate" />
     <br/>
     <input id="createTaskButton" type="submit" name="createTask" value="Create Task">
-    <button id="saveTaskButton" >Save Task</button>
 </form>
+
+    <button id="saveTaskButton" >Save Task</button>
 
 </body>
 <script>
 
-    d3.select("#saveTaskButton").on("click", saveTask)
-
-    var formData = JSON.stringify($("#myForm"));
+    d3.select("#saveTaskButton").on("click", saveTask);
 
     function saveTask() {
-    $.ajax({
-         url: "http://localhost:8080/createTask",
-         method: 'POST',
-         dataType: "json",
-         data: formData,
-         contentType : "application/json",
-         mimeType : "application/json",
-         success: function(){}
-         });
+
+        $.ajax({
+            type: "post",
+            url: "http://localhost:8080/createTask",
+            contentType : "application/json",
+            mimeType : "application/json",
+            data: { name:"John", location:"Boston" },
+            method: "POST",
+            dataType: "json",
+            success: successAlert("Made AJAX POST request."),
+            onError: errorAlert("Failed to make AJAX POST request.")
+        });
     }
 
+    function postCreateTask(){
+        $.get("http://localhost:8080/prices", successAlert("Used jQuery to make get request."))
+    }
 
+    function successAlert(message) {
+        alert("Success! " + message);
+    }
+
+    function errorAlert(message) {
+        alert("Error: " + message);
+    }
 
 </script>
 </html>
