@@ -3,72 +3,53 @@
 <head>
     <meta charset="UTF-8">
     <title>Add New Task</title>
-    <link rel="stylesheet" href="primer.scss" >
-    <script src="d3.min.js" charset="utf8"></script>
-    <style>
-        body { background-color: #222222 }
-        h1 { color: #eaf2f5 }
-        td { width: 80px; }
-        p  { color: #eaf2f5;}
-    </style>
+    <link href="../css/bbBasic.css" type="text/css" rel="stylesheet" />
+    <script src="../d3.min.js" charset="utf8"></script>
+    <script language="JavaScript" type="text/javascript" src="../../bower_components/jquery/jquery.min.js"></script>
 </head>
 
 <body>
-<p>You'll be able to add a new task using this page soon.</p>
-<button onclick="window.close" >Close Window</button>
 
-<form id="myForm" >
-    <p>Title:
-        <input type="text"
-               name="title"
-               size="15"
-               maxlength="30"
-               required="required">
-    </p>
-    <p>Description
-        <textarea name="description"
-                  cols="20"
-                  rows="4">Enter here...</textarea>
-    </p>
-    <label for="dueDate" >Due date:</label>
-    <input type="date" id="dueDate" />
-    <br/>
-    <input id="createTaskButton" type="submit" name="createTask" value="Create Task">
-</form>
+    <div>
+        <div id="masthead">
+            <h1 id="title">BeatsBuddy</h1>
+        </div>
 
-    <button id="saveTaskButton" >Save Task</button>
+            <p>Title:
+                <input type="text"
+                       name="title"
+                       size="15"
+                       maxlength="30"
+                       required="required">
+            </p>
+            <p>Description
+                <textarea id="descriptionInput"
+                          name="description"
+                          cols="20"
+                          rows="4">Enter here...</textarea>
+            </p>
+            <label for="dueDate" >Due date:</label>
+            <input type="date" id="dueDate" />
 
-</body>
+            <button id="albumButton" onclick="makeJSONRequest()">POST Request</button>
+    </div>
+
 <script>
 
-    d3.select("#saveTaskButton").on("click", saveTask);
-
-    function saveTask() {
-
+    function makeJSONRequest() {
+        var descriptionValue = $('#descriptionInput').val();
         $.ajax({
-            type: "post",
-            url: "http://localhost:8080/createTask",
-            contentType : "application/json",
-            mimeType : "application/json",
-            data: { name:"John", location:"Boston" },
-            method: "POST",
-            dataType: "json",
-            success: successAlert("Made AJAX POST request."),
-            onError: errorAlert("Failed to make AJAX POST request.")
+            type: "POST",
+            url: "http://localhost:8090/addPerson",
+            data: JSON.stringify({ name: descriptionValue, age: 20, city: "Sydney" }),
+            contentType: 'application/json',
+            success: function(data) {
+                if(data.status == 'OK') alert('Person has been added');
+                else alert('Failed adding person: ' + data.status + ', ' + data.errorMessage);
+            }
         });
     }
 
-    function postCreateTask(){
-        $.get("http://localhost:8080/prices", successAlert("Used jQuery to make get request."))
-    }
-
-    function successAlert(message) {
-        alert("Success! " + message);
-    }
-
-    function errorAlert(message) {
-        alert("Error: " + message);
-    }
-
 </script>
+</body>
 </html>

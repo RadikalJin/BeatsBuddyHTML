@@ -5,7 +5,7 @@
 	<title>BeatsBuddy</title>
 	<link href="css/bbBasic.css" type="text/css" rel="stylesheet" />
 	<script src="d3.min.js" charset="utf8"></script>
-	<script src="../bower_components/jquery/dist/jquery.js" charset="utf8"></script>
+    <script language="JavaScript" type="text/javascript" src="../bower_components/jquery/jquery.min.js"></script>
 </head>
 <body>
 
@@ -21,12 +21,14 @@
 			<li class="is-active"><a href="tasks/newTask.html" target="_blank">Add a new task</a></li>
 		</ul>
 	</nav>
-		<p>Search: <input type="search" name="search"></p>
 
+    <button id="albumButton" onclick="makeJSONRequest()">POST Request</button>
+
+	<p>Search: <input type="search" name="search"></p>
+
+	<span>
 		<div class="column1" >
-			<table class="datagrid"
-				   onload="loadAlbums()"
-					>
+			<table class="datagrid" >
 				<thead>
 				<tr>
 					<th>Release</th>
@@ -40,9 +42,7 @@
 		</div>
 
 		<div class="column2" >
-			<table class="datagrid"
-				   onload="loadPrices()"
-					>
+			<table class="datagrid">
 				<thead>
 				<tr>
 					<th>Id</th>
@@ -54,8 +54,7 @@
 				</tbody>
 			</table>
 			<br/>
-			<table class="datagrid"
-					onload="loadTasks">
+			<table class="datagrid">
 				<thead>
 				<tr>
 					<th>Title</th>
@@ -67,54 +66,70 @@
 				</tbody>
 			</table>
 		</div>
+	</span>
 
 </div>
 
 <script>
 
+    function makeJSONRequest() {
+        $.ajax({
+            type: "POST",
+            url: "http://localhost:8090/addPerson",
+            data: JSON.stringify({ name: "Index", age: 20, city: "Sydney" }),
+            contentType: 'application/json',
+            success: function(data) {
+                if(data.status == 'OK') alert('Person has been added');
+                else alert('Failed adding person: ' + data.status + ', ' + data.errorMessage);
+            }
+        });
+    }
+
+	onload = populateTables;
+
+	function populateTables() {
+		loadAlbums();
+		loadPrices();
+		loadTasks();
+	}
+
+
+
 	function loadAlbums() {
-		d3.json("http://localhost:8080/albums",
-			function(err, res) {
-				if (err) {
-					alert("Unable to load album data.");
-				} else {
-					renderAlbumTable(res);
-				}
-			}
-		)
+		d3.json("http://localhost:8090/albums", function(err, res) {
+			if (err) alert("Unable to load album data.")
+			else renderAlbumTable(res)
+		})
 	}
 
 	function renderAlbumTable(data) {
 
 		var albums = data.map(function(d) {
-			var releaseDateRaw = new Date(d.releaseDate);
-			var year = releaseDateRaw.getFullYear();
-			var month = releaseDateRaw.getMonth();
-			var date = releaseDateRaw.getDate();
-			var releaseDateString = year + '.' + month + '.' + date;
+			var releaseDateRaw = new Date(d.releaseDate)
+			var year = releaseDateRaw.getFullYear()
+			var month = releaseDateRaw.getMonth()
+			var date = releaseDateRaw.getDate()
+			var releaseDateString = year + '.' + month + '.' + date
 			return [releaseDateString, d.artist, d.title]
 		})
 
 		var tr = d3.select("#albumRecords")
 				.selectAll("tr")
-				.data(albums);
+				.data(albums)
 		tr.enter()
-				.append("tr");
+				.append("tr")
 
 		var td = tr.selectAll("td")
-				.data(function(d) { return d });
+				.data(function(d) { return d })
 		td.enter()
-				.append("td");
+				.append("td")
 		td.text(String)
 	}
 
 	function loadPrices() {
-		d3.json("http://localhost:8080/prices", function(err, res) {
-			if (err) {
-				alert("Unable to load price data.");
-			} else {
-				renderPricesTable(res);
-			}
+		d3.json("http://localhost:8090/prices", function(err, res) {
+			if (err) alert("Unable to load price data.")
+			else renderPricesTable(res)
 		})
 	}
 
@@ -138,7 +153,7 @@
 	}
 
 	function loadTasks() {
-		d3.json("http://localhost:8080/tasks", function(err, res) {
+		d3.json("http://localhost:8090/tasks", function(err, res) {
 			if (err) alert("Unable to load task data.")
 			else renderTaskTable(res)
 		})
