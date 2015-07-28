@@ -10,44 +10,65 @@
 
 <body>
 
-    <div>
         <div id="masthead">
-            <h1 id="title">BeatsBuddy</h1>
+            <h1 id="beatsBuddyTitle">BeatsBuddy</h1>
         </div>
 
-            <p>Title:
+        <article >
+
+            <div display="inline"
+                    >
+                <label for="titleInput">Title:</label>
                 <input type="text"
-                       name="title"
-                       size="15"
+                       margin-left="100px"
+                       id="titleInput"
                        maxlength="30"
                        required="required">
-            </p>
-            <p>Description
+            </div>
+
+            <div display="inline">
+                <label for="descriptionInput">Description:</label>
                 <textarea id="descriptionInput"
+                          margin-left="100px"
                           name="description"
+                          placeholder="Please enter..."
                           cols="20"
-                          rows="4">Enter here...</textarea>
-            </p>
-            <label for="dueDate" >Due date:</label>
-            <input type="date" id="dueDate" />
+                          rows="4"
+                        ></textarea>
+            </div>
+
+            <div display="inline">
+                <label for="dueDateInput" >Due date:</label>
+                <input type="date"
+                       margin-left="100px"
+                       id="dueDateInput" />
+            </div>
 
             <button id="albumButton" onclick="makeJSONRequest()">POST Request</button>
-    </div>
+
+        </article>
+
 
 <script>
 
     function makeJSONRequest() {
+        var titleValue = $('#titleInput').val();
         var descriptionValue = $('#descriptionInput').val();
+        var dueDateValue = $('#dueDateInput').val();
         $.ajax({
             type: "POST",
             url: "http://localhost:8090/addPerson",
-            data: JSON.stringify({ name: descriptionValue, age: 20, city: "Sydney" }),
+            data: JSON.stringify({ title: titleValue,
+                description: descriptionValue,
+                dueDate: dueDateValue
+            }),
             contentType: 'application/json',
             success: function(data) {
                 if(data.status == 'OK') alert('Person has been added');
                 else alert('Failed adding person: ' + data.status + ', ' + data.errorMessage);
             }
         });
+
     }
 
 </script>

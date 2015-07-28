@@ -3,7 +3,7 @@ var express = require('express')
 
 app.use(express.static('./public'))
 
-/*app.get("/prices", function(req, res) {
+app.get("/prices", function(req, res) {
 
    var prices = []
 
@@ -16,7 +16,19 @@ app.use(express.static('./public'))
    }
 
    res.send(prices)
-})*/
+})
+
+app.get("/reloadTasks", function(req, res) {
+
+    var data = JSON.stringify({
+        title: "reloaded",
+        description: "desc",
+        dueDate: new Date()
+    })
+
+    res.send(data)
+})
+
 
 app.listen(9000)
 console.log('Listening on port 9000')

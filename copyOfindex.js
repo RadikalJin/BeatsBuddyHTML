@@ -18,5 +18,7 @@ app.get("/prices", function(req, res) {
    res.send(prices)
 })
 
+
+
 app.listen(3000)
 console.log('Listening on port 3000')
